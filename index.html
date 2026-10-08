@@ -269,17 +269,19 @@
       padding: 6px;
       border-radius: 12px;
       border: 1px solid var(--surface-border);
-      max-width: 900px;
+      max-width: 1040px;
       margin: 1.5rem auto 0 auto;
+      flex-wrap: wrap;
     }
 
     .tab-btn {
       flex: 1;
-      padding: 12px 18px;
+      min-width: 180px;
+      padding: 12px 16px;
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
@@ -323,7 +325,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* MOCKUPS */
+    /* MOCKUPS GERAIS */
     .mockup-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -361,6 +363,19 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .click-hint-banner {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px dashed rgba(59, 130, 246, 0.6);
+      color: #93c5fd;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     /* INSTAGRAM MOCKUP */
@@ -536,12 +551,21 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .ig-action-bar:hover {
+      background: #2563eb;
     }
 
     .ig-action-bar span {
       font-size: 0.85rem;
       font-weight: 600;
       color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .ig-cta-btn {
@@ -553,6 +577,11 @@
       font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .ig-cta-btn:hover {
+      transform: scale(1.05);
     }
 
     .ig-interactions {
@@ -586,7 +615,7 @@
       padding: 1.5rem;
       color: #202124;
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
 
     .google-search-bar {
@@ -644,6 +673,10 @@
       cursor: pointer;
     }
 
+    .google-headline:hover {
+      text-decoration: underline;
+    }
+
     .google-snippet {
       font-size: 0.85rem;
       color: #4d5156;
@@ -666,6 +699,11 @@
       text-decoration: none;
       display: block;
       margin-bottom: 2px;
+      cursor: pointer;
+    }
+
+    .sitelink-item a:hover {
+      text-decoration: underline;
     }
 
     .sitelink-item p {
@@ -673,7 +711,420 @@
       color: #70757a;
     }
 
-    /* ABA 2: CALCULADORA */
+    .direct-actions-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .btn-direct-lp {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-direct-lp:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-direct-site {
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-direct-site:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* ==============================================================
+       ABA 2: LANDING PAGE DE CONVERSÃO INTEGRADA
+       ============================================================== */
+    .lp-wrapper {
+      background: #0d1522;
+      border: 1px solid var(--surface-border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    }
+
+    .lp-notice-bar {
+      background: linear-gradient(90deg, #1e3a8a, #0e3054);
+      color: #bfdbfe;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      text-align: center;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lp-nav {
+      background: #111a28;
+      border-bottom: 1px solid #1f2d42;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lp-brand-tag {
+      font-family: 'Outfit';
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .lp-brand-tag span {
+      color: #38bdf8;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .lp-nav-cta {
+      background: var(--whatsapp);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 18px;
+      border-radius: 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .lp-hero {
+      padding: 3.5rem 2rem;
+      text-align: center;
+      background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.18), transparent 70%);
+      border-bottom: 1px solid #1f2d42;
+    }
+
+    .lp-hero-tag {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 1.25rem;
+    }
+
+    .lp-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      max-width: 860px;
+      margin: 0 auto 1.25rem auto;
+      line-height: 1.25;
+    }
+
+    .lp-hero h1 span {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lp-hero p {
+      font-size: 1.05rem;
+      color: #94a3b8;
+      max-width: 720px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.6;
+    }
+
+    .lp-hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-lp-primary {
+      background: #2563eb;
+      color: #fff;
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+      border: none;
+    }
+
+    .btn-lp-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-lp-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* FAIXA DE CONFIANÇA LP */
+    .lp-trust-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background: #0b111a;
+      border-bottom: 1px solid #1f2d42;
+    }
+
+    @media (max-width: 768px) {
+      .lp-trust-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .lp-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lp-trust-item i {
+      font-size: 1.3rem;
+      color: #38bdf8;
+    }
+
+    .lp-trust-item div strong {
+      display: block;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .lp-trust-item div span {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    /* SEÇÃO PLANOS NA LP */
+    .lp-section {
+      padding: 3rem 2rem;
+      border-bottom: 1px solid #1f2d42;
+    }
+
+    .lp-section-header {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 2.5rem auto;
+    }
+
+    .lp-section-header h2 {
+      font-family: 'Outfit';
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .lp-section-header p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+    }
+
+    .lp-plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .lp-plan-card {
+      background: #111a28;
+      border: 1px solid #1f2d42;
+      border-radius: 14px;
+      padding: 1.75rem 1.5rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s;
+    }
+
+    .lp-plan-card:hover {
+      border-color: #38bdf8;
+      transform: translateY(-4px);
+    }
+
+    .lp-plan-card.featured {
+      border: 2px solid #2563eb;
+      background: #132238;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+    }
+
+    .lp-plan-badge {
+      position: absolute;
+      top: -12px;
+      right: 16px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .plan-name {
+      font-family: 'Outfit';
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .plan-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 1.25rem;
+    }
+
+    .plan-price {
+      font-family: 'Outfit';
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #1f2d42;
+    }
+
+    .plan-price small {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: normal;
+    }
+
+    .plan-features {
+      list-style: none;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .plan-features i {
+      color: #10b981;
+      margin-top: 3px;
+    }
+
+    .btn-plan {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid #2563eb;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .btn-plan:hover {
+      background: #2563eb;
+    }
+
+    /* SEÇÃO DE SEGURANÇA BANCÁRIA */
+    .security-flow-box {
+      background: #0b111a;
+      border: 1px solid #1f2d42;
+      border-radius: 14px;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .security-step-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .security-step-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sec-card {
+      background: #111a28;
+      padding: 1.5rem 1rem;
+      border-radius: 10px;
+      border: 1px solid #1f2d42;
+    }
+
+    .sec-icon {
+      font-size: 2rem;
+      color: #38bdf8;
+      margin-bottom: 12px;
+    }
+
+    .sec-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .sec-card p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    /* ABA 3: CALCULADORA DE RETORNO */
     .calc-layout {
       display: grid;
       grid-template-columns: 1fr 1.35fr;
@@ -747,6 +1198,7 @@
       display: flex;
       gap: 8px;
       margin-top: 0.75rem;
+      flex-wrap: wrap;
     }
 
     .preset-chip {
@@ -846,7 +1298,7 @@
       color: #6ee7b7;
     }
 
-    /* ABA 3: WHATSAPP */
+    /* ABA 4: WHATSAPP */
     .whatsapp-container {
       max-width: 650px;
       margin: 0 auto;
@@ -1033,20 +1485,25 @@
 
   <!-- NAVEGAÇÃO DE ABAS -->
   <div class="tabs-nav">
-    <button class="tab-btn active" onclick="switchTab('tab-mockups')">
+    <button class="tab-btn active" data-tab="tab-mockups" onclick="switchTab('tab-mockups')">
       <i class="fab fa-instagram"></i> 1. Visualização dos Anúncios
     </button>
-    <button class="tab-btn" onclick="switchTab('tab-calculadora')">
-      <i class="fas fa-calculator"></i> 2. Calculadora de Retorno & Metas
+    <button class="tab-btn" data-tab="tab-landing" onclick="switchTab('tab-landing')">
+      <i class="fas fa-laptop"></i> 2. Landing Page do BPO (Destino)
     </button>
-    <button class="tab-btn" onclick="switchTab('tab-whatsapp')">
-      <i class="fab fa-whatsapp"></i> 3. Jornada do Lead no WhatsApp
+    <button class="tab-btn" data-tab="tab-calculadora" onclick="switchTab('tab-calculadora')">
+      <i class="fas fa-calculator"></i> 3. Calculadora de Retorno & Metas
+    </button>
+    <button class="tab-btn" data-tab="tab-whatsapp" onclick="switchTab('tab-whatsapp')">
+      <i class="fab fa-whatsapp"></i> 4. Jornada do Lead no WhatsApp
     </button>
   </div>
 
   <div class="container">
 
-    <!-- ABA 1: VISUALIZAÇÃO DOS ANÚNCIOS -->
+    <!-- ==============================================================
+         ABA 1: VISUALIZAÇÃO DOS ANÚNCIOS
+         ============================================================== -->
     <div class="tab-content active" id="tab-mockups">
       <div class="mockup-grid">
         
@@ -1055,6 +1512,11 @@
           <div class="panel-header">
             <h3><i class="fab fa-instagram" style="color: #ec4899;"></i> Instagram · Anúncio Carrossel</h3>
             <span style="font-size: 0.75rem; color: var(--text-muted);">Formato Feed (4:5 / 1:1)</span>
+          </div>
+
+          <div class="click-hint-banner">
+            <span><i class="fas fa-hand-pointer"></i> <strong>Interativo:</strong> Clique no botão do anúncio para navegar até a Landing Page.</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
 
           <div class="ig-card">
@@ -1080,9 +1542,10 @@
               <div class="ig-carousel-dots" id="carouselDots"></div>
             </div>
 
-            <div class="ig-action-bar">
-              <span>Diagnóstico Financeiro Sem Custo</span>
-              <button class="ig-cta-btn">Saiba Mais</button>
+            <!-- BOTÃO DE AÇÃO CLICÁVEL -->
+            <div class="ig-action-bar" onclick="goToLandingPage()" title="Clique para abrir a Landing Page simulada">
+              <span>Diagnóstico Financeiro Sem Custo <i class="fas fa-chevron-right" style="font-size:0.75rem;"></i></span>
+              <button class="ig-cta-btn" onclick="event.stopPropagation(); goToLandingPage()">Saiba Mais</button>
             </div>
 
             <div class="ig-interactions">
@@ -1098,6 +1561,15 @@
               <strong>agiconcontabilidade</strong> O mercado não aceita mais amadores: sua empresa só cresce quando você conhece seus números. Terceirize a rotina de contas a pagar, a receber e conciliação bancária sem contrato de fidelidade... <span style="color: #8e8e8e; cursor: pointer;">mais</span>
             </div>
           </div>
+
+          <div class="direct-actions-row">
+            <button onclick="goToLandingPage()" class="btn-direct-lp">
+              <i class="fas fa-external-link-alt"></i> Testar Clique ➔ Abrir Landing Page
+            </button>
+            <a href="https://www.agicon.srv.br/#bpo" target="_blank" class="btn-direct-site">
+              <i class="fas fa-globe"></i> Site Oficial ↗
+            </a>
+          </div>
         </div>
 
         <!-- GOOGLE ADS SEARCH MOCKUP -->
@@ -1105,6 +1577,11 @@
           <div class="panel-header">
             <h3><i class="fab fa-google" style="color: #3b82f6;"></i> Google Ads · Rede de Pesquisa</h3>
             <span style="font-size: 0.75rem; color: var(--text-muted);">Termo: "bpo financeiro empresas"</span>
+          </div>
+
+          <div class="click-hint-banner">
+            <span><i class="fas fa-mouse-pointer"></i> <strong>Interativo:</strong> Clique no título ou sitelinks para abrir a página.</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
 
           <div class="google-card">
@@ -1119,7 +1596,8 @@
               <span>agicon.srv.br/bpo-financeiro</span>
             </div>
 
-            <a class="google-headline" href="#">
+            <!-- TÍTULO CLICÁVEL -->
+            <a class="google-headline" href="javascript:void(0)" onclick="goToLandingPage()" title="Clique para abrir a Landing Page simulada">
               BPO Financeiro Grupo Agicon | Sem Contrato de Fidelidade | A Partir de R$ 500/mês
             </a>
 
@@ -1129,22 +1607,31 @@
 
             <div class="google-sitelinks">
               <div class="sitelink-item">
-                <a href="#">Planos Sob Medida</a>
+                <a href="javascript:void(0)" onclick="goToLandingPage('lp-planos')">Planos Sob Medida ➔</a>
                 <p>Opções a partir de R$ 500/mês para PMEs.</p>
               </div>
               <div class="sitelink-item">
-                <a href="#">Segurança Bancária 100%</a>
+                <a href="javascript:void(0)" onclick="goToLandingPage('lp-seguranca')">Segurança Bancária 100% ➔</a>
                 <p>Acesso exclusivo como operador secundário.</p>
               </div>
               <div class="sitelink-item">
-                <a href="#">Traduzindo o Financês</a>
+                <a href="javascript:void(0)" onclick="goToLandingPage('lp-finances')">Traduzindo o Financês ➔</a>
                 <p>Relatórios claros de DRE e lucratividade.</p>
               </div>
               <div class="sitelink-item">
-                <a href="#">WhatsApp Direto</a>
-                <p>Fale agora com nossos especialistas.</p>
+                <a href="javascript:void(0)" onclick="switchTab('tab-whatsapp')">WhatsApp Direto ➔</a>
+                <p>Fale agora com a especialista Carolina.</p>
               </div>
             </div>
+          </div>
+
+          <div class="direct-actions-row">
+            <button onclick="goToLandingPage()" class="btn-direct-lp">
+              <i class="fas fa-external-link-alt"></i> Testar Clique ➔ Abrir Landing Page
+            </button>
+            <a href="https://www.agicon.srv.br/#bpo" target="_blank" class="btn-direct-site">
+              <i class="fas fa-globe"></i> Site Oficial ↗
+            </a>
           </div>
 
           <!-- COMPARATIVO VISUAL CLT vs BPO -->
@@ -1169,7 +1656,233 @@
       </div>
     </div>
 
-    <!-- ABA 2: CALCULADORA DE RETORNO -->
+    <!-- ==============================================================
+         ABA 2: LANDING PAGE DE CONVERSÃO INTEGRADA (DESTINO DO CLIQUE)
+         ============================================================== -->
+    <div class="tab-content" id="tab-landing">
+      <div class="lp-wrapper">
+        
+        <!-- BARRA DE AVISO SUPERIOR -->
+        <div class="lp-notice-bar">
+          <span>🎯 <strong>Diagnóstico Financeiro Gratuito para Empresas:</strong> Analisamos a rotina e o fluxo de caixa sem custo.</span>
+          <button onclick="switchTab('tab-whatsapp')" style="background:#fff; color:#0e3054; border:none; padding:4px 12px; border-radius:999px; font-size:0.75rem; font-weight:700; cursor:pointer;">Agendar Agora</button>
+        </div>
+
+        <!-- NAVBAR DA LANDING PAGE -->
+        <div class="lp-nav">
+          <div class="lp-brand-tag">
+            AGICON <span>| BPO FINANCEIRO</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items:center;">
+            <a href="javascript:void(0)" onclick="goToLandingPage('lp-planos')" style="color:#cbd5e1; font-size:0.85rem; text-decoration:none; font-weight:600; margin-right:8px;">Planos</a>
+            <a href="javascript:void(0)" onclick="goToLandingPage('lp-seguranca')" style="color:#cbd5e1; font-size:0.85rem; text-decoration:none; font-weight:600; margin-right:8px;">Segurança</a>
+            <button onclick="switchTab('tab-whatsapp')" class="lp-nav-cta">
+              <i class="fab fa-whatsapp"></i> Fale no WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <!-- HERO SECTION -->
+        <section class="lp-hero">
+          <div class="lp-hero-tag">⚡ TERCEIRIZAÇÃO FINANCEIRA INTELIGENTE · GRUPO AGICON</div>
+          <h1>Pare de perder tempo com boletos e extratos. Tenha seu setor financeiro <br><span>organizado e 100% sob controle.</span></h1>
+          <p>
+            O BPO Financeiro do Grupo Agicon assume suas contas a pagar, a receber, conciliação e relatórios gerenciais para você focar no que realmente importa: vender, atender clientes e crescer.
+          </p>
+          <div class="lp-hero-actions">
+            <button onclick="switchTab('tab-whatsapp')" class="btn-lp-primary">
+              <i class="fab fa-whatsapp"></i> Solicitar Diagnóstico Financeiro Gratuito
+            </button>
+            <button onclick="goToLandingPage('lp-planos')" class="btn-lp-secondary">
+              <i class="fas fa-list-ul"></i> Conhecer os Planos a partir de R$ 500
+            </button>
+          </div>
+        </section>
+
+        <!-- FAIXA DE CONFIANÇA -->
+        <div class="lp-trust-bar">
+          <div class="lp-trust-item">
+            <i class="fas fa-shield-alt"></i>
+            <div><strong>100% Seguro</strong><span>Você mantém o poder de autorização</span></div>
+          </div>
+          <div class="lp-trust-item">
+            <i class="fas fa-handshake"></i>
+            <div><strong>Sem Fidelidade</strong><span>Pague pelo mês prestado</span></div>
+          </div>
+          <div class="lp-trust-item">
+            <i class="fas fa-award"></i>
+            <div><strong>+11 Anos de Solidez</strong><span>Grupo Agicon & AgiCorp</span></div>
+          </div>
+          <div class="lp-trust-item">
+            <i class="fas fa-chart-line"></i>
+            <div><strong>Números Claros</strong><span>Relatórios descomplicados</span></div>
+          </div>
+        </div>
+
+        <!-- SEÇÃO SEGURANÇA BANCÁRIA -->
+        <section class="lp-section" id="lp-seguranca">
+          <div class="lp-section-header">
+            <h2>Como funciona a Segurança Bancária?</h2>
+            <p>A pergunta que todo empresário faz: <em>"A Agicon vai ter acesso ao meu dinheiro?"</em><br><strong>A resposta é NÃO.</strong> Veja o fluxo de agendamento e autorização:</p>
+          </div>
+
+          <div class="security-flow-box">
+            <div class="security-step-row">
+              <div class="sec-card">
+                <div class="sec-icon"><i class="fas fa-file-invoice"></i></div>
+                <h4>1. Envio de Documentos</h4>
+                <p>Você nos envia notas fiscais, boletos e despesas em uma pasta segura ou WhatsApp corporativo.</p>
+              </div>
+              <div class="sec-card" style="border-color:#38bdf8;">
+                <div class="sec-icon" style="color:#38bdf8;"><i class="fas fa-calendar-check"></i></div>
+                <h4>2. Agendamento BPO</h4>
+                <p>Nossa equipe entra no banco PJ via <strong>usuário secundário de operador</strong> e apenas agenda as contas com pontualidade.</p>
+              </div>
+              <div class="sec-card" style="border-color:#10b981;">
+                <div class="sec-icon" style="color:#10b981;"><i class="fas fa-fingerprint"></i></div>
+                <h4>3. Sua Aprovação Final</h4>
+                <p>Você recebe a notificação, abre o app do banco no celular e <strong>autoriza os pagamentos com seu token pessoal</strong>.</p>
+              </div>
+            </div>
+            <div style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:#6ee7b7;">
+              <i class="fas fa-check-circle"></i> O poder de movimentar seu dinheiro nunca sai da sua mão.
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO TRADUZINDO O FINANCÊS -->
+        <section class="lp-section" id="lp-finances" style="background:#0b111a;">
+          <div class="lp-section-header">
+            <h2>Traduzindo o Financês</h2>
+            <p>Assim como na AgiCorp traduzimos o segurês, no BPO da Agicon traduzimos os números para você decidir sem dor de cabeça.</p>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.25rem; max-width:1100px; margin:0 auto;">
+            <div style="background:#111a28; border:1px solid #1f2d42; border-radius:12px; padding:1.25rem;">
+              <h4 style="color:#38bdf8; font-size:1rem; margin-bottom:6px;"><i class="fas fa-university"></i> Conciliação Diária</h4>
+              <p style="font-size:0.82rem; color:#94a3b8; line-height:1.45;">Não é só olhar o extrato: é ter a certeza de que cada centavo bate com as notas e contratos, sem cobranças indevidas.</p>
+            </div>
+            <div style="background:#111a28; border:1px solid #1f2d42; border-radius:12px; padding:1.25rem;">
+              <h4 style="color:#38bdf8; font-size:1rem; margin-bottom:6px;"><i class="fas fa-bell"></i> Cobrança Profissional</h4>
+              <p style="font-size:0.82rem; color:#94a3b8; line-height:1.45;">Régua impessoal e respeitosa de cobrança que diminui a inadimplência sem constranger seus clientes.</p>
+            </div>
+            <div style="background:#111a28; border:1px solid #1f2d42; border-radius:12px; padding:1.25rem;">
+              <h4 style="color:#38bdf8; font-size:1rem; margin-bottom:6px;"><i class="fas fa-chart-pie"></i> DRE Gerencial</h4>
+              <p style="font-size:0.82rem; color:#94a3b8; line-height:1.45;">Descubra se o seu negócio teve lucro real no mês ou se você está trabalhando só para cobrir despesas fixas.</p>
+            </div>
+            <div style="background:#111a28; border:1px solid #1f2d42; border-radius:12px; padding:1.25rem;">
+              <h4 style="color:#38bdf8; font-size:1rem; margin-bottom:6px;"><i class="fas fa-calendar-alt"></i> Fluxo Projetado</h4>
+              <p style="font-size:0.82rem; color:#94a3b8; line-height:1.45;">Prever os vencimentos dos próximos 30, 60 ou 90 dias para nunca ser pego de surpresa no dia do pagamento.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO TABELA DE PLANOS -->
+        <section class="lp-section" id="lp-planos">
+          <div class="lp-section-header">
+            <h2>Planos Transparentes e Escaláveis</h2>
+            <p>Sem pacote engessado: dimensionamos o serviço conforme a realidade e o volume da sua empresa.</p>
+          </div>
+
+          <div class="lp-plans-grid">
+            
+            <!-- PLANO A -->
+            <div class="lp-plan-card">
+              <div class="plan-name">Empresa A</div>
+              <div class="plan-desc">Para pequenos negócios organizando a casa</div>
+              <div class="plan-price">R$ 500 <small>/mês</small></div>
+              <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Até 10 Notas Fiscais/mês</li>
+                <li><i class="fas fa-check"></i> Até 10 Cobranças mensais</li>
+                <li><i class="fas fa-check"></i> Conciliação de 1 conta PJ</li>
+                <li><i class="fas fa-check"></i> Gestão de Contas a Pagar e Receber</li>
+                <li><i class="fas fa-check"></i> Controle de Inadimplentes</li>
+              </ul>
+              <button onclick="switchTab('tab-whatsapp')" class="btn-plan">Contratar Plano A</button>
+            </div>
+
+            <!-- PLANO B -->
+            <div class="lp-plan-card">
+              <div class="plan-name">Empresa B</div>
+              <div class="plan-desc">Para empresas com volume regular de cobranças</div>
+              <div class="plan-price">R$ 800 <small>/mês</small></div>
+              <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Até 25 Cobranças mensais</li>
+                <li><i class="fas fa-check"></i> Conciliação de até 2 contas PJ</li>
+                <li><i class="fas fa-check"></i> Gestão de Contas a Pagar e Receber</li>
+                <li><i class="fas fa-check"></i> Controle de Inadimplentes</li>
+                <li><i class="fas fa-check"></i> Relatório de Fluxo de Caixa</li>
+                <li><i class="fas fa-check"></i> Análise de Pagamentos</li>
+              </ul>
+              <button onclick="switchTab('tab-whatsapp')" class="btn-plan">Contratar Plano B</button>
+            </div>
+
+            <!-- PLANO C (DESTAQUE) -->
+            <div class="lp-plan-card featured">
+              <div class="lp-plan-badge">Mais Escolhido</div>
+              <div class="plan-name">Empresa C</div>
+              <div class="plan-desc">Com agendamento bancário incluso</div>
+              <div class="plan-price">R$ 1.200 <small>/mês</small></div>
+              <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Até 25 Notas Fiscais/mês</li>
+                <li><i class="fas fa-check"></i> Até 25 Cobranças mensais</li>
+                <li><i class="fas fa-check"></i> Conciliação de 2 contas PJ</li>
+                <li><i class="fas fa-check"></i> <strong>Agendamento de até 25 pagamentos</strong></li>
+                <li><i class="fas fa-check"></i> Gestão de Contas a Pagar e Receber</li>
+                <li><i class="fas fa-check"></i> Relatório de Fluxo de Caixa</li>
+              </ul>
+              <button onclick="switchTab('tab-whatsapp')" class="btn-plan" style="background:#2563eb; color:#fff;">Contratar Plano C</button>
+            </div>
+
+            <!-- PLANO D -->
+            <div class="lp-plan-card">
+              <div class="plan-name">Empresa D</div>
+              <div class="plan-desc">Para operações consolidadas</div>
+              <div class="plan-price">R$ 1.600 <small>/mês</small></div>
+              <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Até 30 Cobranças mensais</li>
+                <li><i class="fas fa-check"></i> Conciliação de 2 contas PJ</li>
+                <li><i class="fas fa-check"></i> <strong>Agendamento de até 30 pagamentos</strong></li>
+                <li><i class="fas fa-check"></i> Indicadores de Análise e DRE</li>
+                <li><i class="fas fa-check"></i> Relatório de Fluxo de Caixa completo</li>
+              </ul>
+              <button onclick="switchTab('tab-whatsapp')" class="btn-plan">Contratar Plano D</button>
+            </div>
+
+          </div>
+
+          <div style="text-align:center; margin-top:2rem;">
+            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:12px;">Precisa de volume personalizado ou múltiplos CNPJs?</p>
+            <button onclick="switchTab('tab-whatsapp')" class="btn-lp-primary" style="margin:0 auto; padding:10px 20px;">
+              <i class="fas fa-comments"></i> Solicitar Proposta Sob Medida
+            </button>
+          </div>
+        </section>
+
+        <!-- CTA FINAL DA LANDING PAGE -->
+        <section style="padding:3.5rem 2rem; text-align:center; background:#0b111a;">
+          <h2 style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff; margin-bottom:0.75rem;">
+            Pronto para tirar o operacional financeiro das suas costas?
+          </h2>
+          <p style="font-size:0.95rem; color:#94a3b8; max-width:600px; margin:0 auto 1.75rem auto;">
+            Converse agora com a especialista <strong>Carolina Carneiro</strong> e receba uma orientação clara sem custo nem compromisso.
+          </p>
+          <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <button onclick="switchTab('tab-whatsapp')" class="btn-lp-primary" style="background:var(--whatsapp); color:#000;">
+              <i class="fab fa-whatsapp"></i> Falar com o BPO no WhatsApp
+            </button>
+            <a href="https://www.agicon.srv.br" target="_blank" class="btn-lp-secondary">
+              <i class="fas fa-external-link-alt"></i> Visitar Agicon Contabilidade
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ==============================================================
+         ABA 3: CALCULADORA DE RETORNO & METAS
+         ============================================================== -->
     <div class="tab-content" id="tab-calculadora">
       <div class="calc-layout">
         
@@ -1291,7 +2004,9 @@
       </div>
     </div>
 
-    <!-- ABA 3: WHATSAPP -->
+    <!-- ==============================================================
+         ABA 4: JORNADA DO LEAD NO WHATSAPP
+         ============================================================== -->
     <div class="tab-content" id="tab-whatsapp">
       <div class="whatsapp-container">
         
@@ -1343,7 +2058,6 @@
 
   <script>
     // SISTEMA DE PROTEÇÃO POR SENHA (SHA-256)
-    // Senha padrão: agicon2026 (ou bpoagicon)
     const validHashes = [
       "7315928ad4b0b9b87775b33ef798975e218aa9a28da286d6496de535da1098e8", // agicon2026
       "338600d8b4eeb6452243d463d1bc8452ef72a8fe7b4c6e94916a246944ec782c"  // bpoagicon
@@ -1454,13 +2168,32 @@
       renderSlide();
     }
 
-    // TABS
+    // TABS E NAVEGAÇÃO
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.getAttribute('data-tab') === tabId) {
+          b.classList.add('active');
+        }
+      });
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      const target = document.getElementById(tabId);
+      if (target) {
+        target.classList.add('active');
+      }
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
 
-      event.currentTarget.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
+    // NAVEGAÇÃO DO CLIQUE DO ANÚNCIO PARA A LANDING PAGE
+    function goToLandingPage(sectionId) {
+      switchTab('tab-landing');
+      if (sectionId) {
+        setTimeout(() => {
+          const el = document.getElementById(sectionId);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
     }
 
     // CALCULADORA
