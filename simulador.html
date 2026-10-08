@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Simulador Interno de Tráfego Pago | BPO Financeiro Grupo Agicon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0e3054;
+      --primary-light: #184c82;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --gold: #d97706;
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-card: #1f2937;
+      --surface-border: #374151;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+      --whatsapp: #25d366;
+      --insta-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* GATE DE PROTEÇÃO POR SENHA (MODAL BLUR) */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 13, 22, 0.96);
+      backdrop-filter: blur(20px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    #authOverlay.unlocked {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .auth-card {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .auth-badge-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), #1e40af);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #fff;
+      margin: 0 auto 1.25rem auto;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    .auth-card h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .auth-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-input-group {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-align: center;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .auth-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .auth-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .auth-btn:active {
+      transform: scale(0.98);
+    }
+
+    .auth-error {
+      color: #f87171;
+      font-size: 0.8rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .auth-hint {
+      margin-top: 1.25rem;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    /* HEADER */
+    header {
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-badge {
+      background: linear-gradient(135deg, var(--accent), #1e40af);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-simulador {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: var(--success);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .lock-btn {
+      background: transparent;
+      border: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .lock-btn:hover {
+      color: #fff;
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* NAVIGATION TABS */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: var(--surface);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--surface-border);
+      max-width: 900px;
+      margin: 1.5rem auto 0 auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 18px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 1.5rem auto 3rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MOCKUPS */
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .mockup-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mockup-panel {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .panel-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* INSTAGRAM MOCKUP */
+    .ig-card {
+      background: #000;
+      border: 1px solid #262626;
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 440px;
+      margin: 0 auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    .ig-header {
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #000;
+    }
+
+    .ig-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ig-avatar-ring {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--insta-gradient);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ig-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #111827;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.75rem;
+      color: #60a5fa;
+    }
+
+    .ig-user-info span {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .ig-user-info small {
+      font-size: 0.7rem;
+      color: #a8a8a8;
+    }
+
+    .ig-carousel-screen {
+      position: relative;
+      background: linear-gradient(145deg, #0f233a, #091320);
+      aspect-ratio: 1/1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid #1f2937;
+      border-bottom: 1px solid #1f2937;
+      user-select: none;
+    }
+
+    .slide-badge {
+      display: inline-block;
+      align-self: center;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      color: #93c5fd;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+    }
+
+    .slide-highlight {
+      color: #38bdf8;
+    }
+
+    .slide-desc {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .slide-footer-tag {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .ig-carousel-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: all 0.2s;
+    }
+
+    .dot.active {
+      background: #38bdf8;
+      width: 18px;
+      border-radius: 4px;
+    }
+
+    .carousel-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      z-index: 5;
+    }
+
+    .carousel-nav-btn:hover {
+      background: rgba(37, 99, 235, 0.9);
+    }
+
+    .carousel-prev { left: 10px; }
+    .carousel-next { right: 10px; }
+
+    .ig-action-bar {
+      background: #1e3a5f;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ig-action-bar span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .ig-cta-btn {
+      background: #fff;
+      color: #0f172a;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .ig-interactions {
+      padding: 12px 14px 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      color: #fff;
+      font-size: 1.25rem;
+    }
+
+    .ig-left-icons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .ig-caption {
+      padding: 6px 14px 14px 14px;
+      font-size: 0.82rem;
+      color: #e5e7eb;
+      line-height: 1.45;
+    }
+
+    .ig-caption strong {
+      color: #fff;
+    }
+
+    /* GOOGLE ADS MOCKUP */
+    .google-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: #202124;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      margin-top: 1rem;
+    }
+
+    .google-search-bar {
+      background: #f1f3f4;
+      padding: 10px 16px;
+      border-radius: 24px;
+      font-size: 0.88rem;
+      color: #3c4043;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .google-sponsor {
+      font-size: 0.75rem;
+      color: #202124;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .google-url-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #4d5156;
+      margin-bottom: 6px;
+    }
+
+    .google-favicon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #0e3054;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: bold;
+    }
+
+    .google-headline {
+      color: #1a0dab;
+      font-size: 1.15rem;
+      font-weight: 500;
+      text-decoration: none;
+      line-height: 1.35;
+      display: block;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    .google-snippet {
+      font-size: 0.85rem;
+      color: #4d5156;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .google-sitelinks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #ebebeb;
+    }
+
+    .sitelink-item a {
+      color: #1a0dab;
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .sitelink-item p {
+      font-size: 0.75rem;
+      color: #70757a;
+    }
+
+    /* ABA 2: CALCULADORA */
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .calc-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .calc-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .slider-group {
+      margin-bottom: 2rem;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .slider-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #d1d5db;
+    }
+
+    .slider-val-badge {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 4px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .range-input {
+      width: 100%;
+      height: 8px;
+      background: #374151;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .range-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .presets-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 0.75rem;
+    }
+
+    .preset-chip {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .preset-chip:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .funnel-step {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .funnel-step:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .step-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .step-metric {
+      text-align: right;
+    }
+
+    .metric-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .roi-highlight-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 78, 59, 0.3));
+      border: 1px solid var(--success);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .roi-stat h5 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #a7f3d0;
+      margin-bottom: 4px;
+    }
+
+    .roi-stat .val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .roi-stat small {
+      font-size: 0.75rem;
+      color: #6ee7b7;
+    }
+
+    /* ABA 3: WHATSAPP */
+    .whatsapp-container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #0b141a;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #222d34;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    .wa-top-bar {
+      background: #202c33;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #2a3942;
+    }
+
+    .wa-contact-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #111b21;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--whatsapp);
+      border: 2px solid var(--whatsapp);
+    }
+
+    .wa-top-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e9edef;
+    }
+
+    .wa-top-info p {
+      font-size: 0.75rem;
+      color: #8696a0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .wa-chat-window {
+      height: 420px;
+      overflow-y: auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #0b141a url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png') repeat;
+      background-blend-mode: overlay;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .bubble.received {
+      background: #202c33;
+      color: #e9edef;
+      align-self: flex-start;
+      border-top-left-radius: 2px;
+    }
+
+    .bubble.sent {
+      background: #005c4b;
+      color: #e9edef;
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+    }
+
+    .bubble-time {
+      display: block;
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .wa-interactive-actions {
+      background: #202c33;
+      padding: 14px 16px;
+      border-top: 1px solid #2a3942;
+    }
+
+    .wa-actions-label {
+      font-size: 0.75rem;
+      color: #8696a0;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .wa-choices-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .wa-choice-btn {
+      background: #111b21;
+      border: 1px solid #2a3942;
+      color: #e9edef;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .wa-choice-btn:hover {
+      background: var(--whatsapp);
+      color: #000;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--surface-border);
+      background: var(--surface);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL DE PROTEÇÃO POR SENHA -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-badge-icon"><i class="fas fa-lock"></i></div>
+      <h2>Área Restrita</h2>
+      <p>Simulador e Apresentação Interna de Tráfego Pago do BPO Financeiro Grupo Agicon.</p>
+      
+      <div class="auth-input-group">
+        <input type="password" id="passInput" class="auth-input" placeholder="Digite a senha" autofocus onkeydown="if(event.key==='Enter') verifyPass()">
+      </div>
+      
+      <button class="auth-btn" onclick="verifyPass()">
+        <i class="fas fa-key"></i> Desbloquear Simulação
+      </button>
+
+      <div class="auth-error" id="authError">
+        <i class="fas fa-exclamation-triangle"></i> Senha incorreta. Tente novamente.
+      </div>
+
+      <div class="auth-hint">
+        🔒 Acesso reservado exclusivamente para equipe e diretoria.
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo-badge">AGICON</div>
+      <div>
+        <div class="brand-title">BPO Financeiro · Simulador de Tráfego</div>
+        <div class="brand-subtitle">Metodologia e Posicionamento AgiCorp Seguros</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="badge-simulador">
+        <span class="pulse-dot"></span>
+        Simulação Ativa
+      </div>
+      <button class="lock-btn" onclick="lockSession()">
+        <i class="fas fa-lock"></i> Bloquear
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVEGAÇÃO DE ABAS -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('tab-mockups')">
+      <i class="fab fa-instagram"></i> 1. Visualização dos Anúncios
+    </button>
+    <button class="tab-btn" onclick="switchTab('tab-calculadora')">
+      <i class="fas fa-calculator"></i> 2. Calculadora de Retorno & Metas
+    </button>
+    <button class="tab-btn" onclick="switchTab('tab-whatsapp')">
+      <i class="fab fa-whatsapp"></i> 3. Jornada do Lead no WhatsApp
+    </button>
+  </div>
+
+  <div class="container">
+
+    <!-- ABA 1: VISUALIZAÇÃO DOS ANÚNCIOS -->
+    <div class="tab-content active" id="tab-mockups">
+      <div class="mockup-grid">
+        
+        <!-- INSTAGRAM FEED MOCKUP -->
+        <div class="mockup-panel">
+          <div class="panel-header">
+            <h3><i class="fab fa-instagram" style="color: #ec4899;"></i> Instagram · Anúncio Carrossel</h3>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Formato Feed (4:5 / 1:1)</span>
+          </div>
+
+          <div class="ig-card">
+            <div class="ig-header">
+              <div class="ig-user">
+                <div class="ig-avatar-ring">
+                  <div class="ig-avatar">AG</div>
+                </div>
+                <div class="ig-user-info">
+                  <span>agiconcontabilidade</span>
+                  <small>Patrocinado · Sengés-PR e Brasil</small>
+                </div>
+              </div>
+              <i class="fas fa-ellipsis-v" style="color: #a8a8a8; font-size: 0.9rem;"></i>
+            </div>
+
+            <div class="ig-carousel-screen" id="igCarouselScreen">
+              <button class="carousel-nav-btn carousel-prev" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+              <button class="carousel-nav-btn carousel-next" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+
+              <div id="slideContent"></div>
+
+              <div class="ig-carousel-dots" id="carouselDots"></div>
+            </div>
+
+            <div class="ig-action-bar">
+              <span>Diagnóstico Financeiro Sem Custo</span>
+              <button class="ig-cta-btn">Saiba Mais</button>
+            </div>
+
+            <div class="ig-interactions">
+              <div class="ig-left-icons">
+                <i class="far fa-heart"></i>
+                <i class="far fa-comment"></i>
+                <i class="far fa-paper-plane"></i>
+              </div>
+              <i class="far fa-bookmark"></i>
+            </div>
+
+            <div class="ig-caption">
+              <strong>agiconcontabilidade</strong> O mercado não aceita mais amadores: sua empresa só cresce quando você conhece seus números. Terceirize a rotina de contas a pagar, a receber e conciliação bancária sem contrato de fidelidade... <span style="color: #8e8e8e; cursor: pointer;">mais</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GOOGLE ADS SEARCH MOCKUP -->
+        <div class="mockup-panel">
+          <div class="panel-header">
+            <h3><i class="fab fa-google" style="color: #3b82f6;"></i> Google Ads · Rede de Pesquisa</h3>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Termo: "bpo financeiro empresas"</span>
+          </div>
+
+          <div class="google-card">
+            <div class="google-search-bar">
+              <i class="fas fa-search" style="color: #9aa0a6;"></i>
+              <span>bpo financeiro para empresas</span>
+            </div>
+
+            <div class="google-sponsor">Patrocinado</div>
+            <div class="google-url-row">
+              <div class="google-favicon">AG</div>
+              <span>agicon.srv.br/bpo-financeiro</span>
+            </div>
+
+            <a class="google-headline" href="#">
+              BPO Financeiro Grupo Agicon | Sem Contrato de Fidelidade | A Partir de R$ 500/mês
+            </a>
+
+            <div class="google-snippet">
+              Terceirize o contas a pagar, receber, conciliação e fluxo de caixa com mais de 11 anos de solidez. 100% seguro: você sempre aprova. Agende um diagnóstico gratuito.
+            </div>
+
+            <div class="google-sitelinks">
+              <div class="sitelink-item">
+                <a href="#">Planos Sob Medida</a>
+                <p>Opções a partir de R$ 500/mês para PMEs.</p>
+              </div>
+              <div class="sitelink-item">
+                <a href="#">Segurança Bancária 100%</a>
+                <p>Acesso exclusivo como operador secundário.</p>
+              </div>
+              <div class="sitelink-item">
+                <a href="#">Traduzindo o Financês</a>
+                <p>Relatórios claros de DRE e lucratividade.</p>
+              </div>
+              <div class="sitelink-item">
+                <a href="#">WhatsApp Direto</a>
+                <p>Fale agora com nossos especialistas.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPARATIVO VISUAL CLT vs BPO -->
+          <div style="margin-top: 1.5rem; background: var(--surface-card); border-radius: 12px; padding: 1.25rem; border: 1px solid var(--surface-border);">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">
+              <i class="fas fa-balance-scale"></i> Card Comparativo Criativo (Feed / Stories):
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.78rem;">
+              <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px; border-radius: 6px;">
+                <strong style="color: #f87171;">Assistente CLT Interno</strong>
+                <p style="color: #d1d5db; margin-top: 4px;">• Salário + Encargos (~R$ 4.500/mês)<br>• Férias, atestados e 13º<br>• Risco trabalhista</p>
+              </div>
+              <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px; border-radius: 6px;">
+                <strong style="color: #34d399;">BPO Grupo Agicon</strong>
+                <p style="color: #d1d5db; margin-top: 4px;">• A partir de R$ 500/mês<br>• Operação ativa o ano todo<br>• Sem contrato de fidelidade</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ABA 2: CALCULADORA DE RETORNO -->
+    <div class="tab-content" id="tab-calculadora">
+      <div class="calc-layout">
+        
+        <div class="calc-card">
+          <h3 style="font-family: 'Outfit'; font-size: 1.3rem; margin-bottom: 0.5rem; color: #fff;">
+            Parâmetros da Campanha
+          </h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Ajuste o valor do investimento para simular a geração de leads, agendamentos de diagnósticos e receita recorrente (MRR).
+          </p>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Orçamento Mensal em Anúncios:</span>
+              <span class="slider-val-badge" id="budgetDisplay">R$ 1.000</span>
+            </div>
+            <input type="range" min="300" max="5000" step="100" value="1000" class="range-input" id="budgetSlider" oninput="updateCalculator()">
+            <div class="presets-row">
+              <button class="preset-chip" onclick="setBudget(500)">R$ 500/mês</button>
+              <button class="preset-chip" onclick="setBudget(1000)">R$ 1.000/mês</button>
+              <button class="preset-chip" onclick="setBudget(2000)">R$ 2.000/mês</button>
+              <button class="preset-chip" onclick="setBudget(3500)">R$ 3.500/mês</button>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Ticket Médio Estimado do BPO:</span>
+              <span class="slider-val-badge" id="ticketDisplay">R$ 800/mês</span>
+            </div>
+            <input type="range" min="500" max="1600" step="100" value="800" class="range-input" id="ticketSlider" oninput="updateCalculator()">
+            <div class="presets-row">
+              <button class="preset-chip" onclick="setTicket(500)">Plano A (R$ 500)</button>
+              <button class="preset-chip" onclick="setTicket(800)">Plano B (R$ 800)</button>
+              <button class="preset-chip" onclick="setTicket(1200)">Plano C (R$ 1.200)</button>
+              <button class="preset-chip" onclick="setTicket(1600)">Plano D (R$ 1.600)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <h3 style="font-family: 'Outfit'; font-size: 1.3rem; margin-bottom: 0.5rem; color: #fff;">
+            Projeção do Funil de Conversão
+          </h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Estimativas baseadas em benchmarks do segmento contábil e B2B de serviços.
+          </p>
+
+          <div class="funnel-step">
+            <div class="step-info">
+              <h4><i class="fas fa-eye" style="color: #60a5fa;"></i> 1. Impressões & Alcance</h4>
+              <p>Empresários que verão os anúncios no feed e na busca</p>
+            </div>
+            <div class="step-metric">
+              <div class="metric-number" id="impressoesVal">28.500</div>
+              <div class="metric-sub">visualizações</div>
+            </div>
+          </div>
+
+          <div class="funnel-step">
+            <div class="step-info">
+              <h4><i class="fas fa-mouse-pointer" style="color: #38bdf8;"></i> 2. Cliques nos Anúncios</h4>
+              <p>Interessados que clicam para saber mais (CTR ~2.0%)</p>
+            </div>
+            <div class="step-metric">
+              <div class="metric-number" id="cliquesVal">570</div>
+              <div class="metric-sub">cliques (CPC médio: R$ 1,75)</div>
+            </div>
+          </div>
+
+          <div class="funnel-step">
+            <div class="step-info">
+              <h4><i class="fab fa-whatsapp" style="color: var(--whatsapp);"></i> 3. Conversas no WhatsApp</h4>
+              <p>Empresários qualificados iniciando contato direto</p>
+            </div>
+            <div class="step-metric">
+              <div class="metric-number" id="leadsVal">45</div>
+              <div class="metric-sub">leads (CPL: R$ 22,20)</div>
+            </div>
+          </div>
+
+          <div class="funnel-step">
+            <div class="step-info">
+              <h4><i class="fas fa-calendar-check" style="color: #fbbf24;"></i> 4. Diagnósticos Agendados</h4>
+              <p>Reuniões de alinhamento com a especialista Carolina</p>
+            </div>
+            <div class="step-metric">
+              <div class="metric-number" id="reunioesVal">12</div>
+              <div class="metric-sub">diagnósticos realizados</div>
+            </div>
+          </div>
+
+          <div class="funnel-step" style="border-color: var(--success); background: rgba(16, 185, 129, 0.08);">
+            <div class="step-info">
+              <h4><i class="fas fa-check-double" style="color: var(--success);"></i> 5. Novos Clientes BPO Fechados</h4>
+              <p>Conversão estimada entre 20% a 30% dos diagnósticos</p>
+            </div>
+            <div class="step-metric">
+              <div class="metric-number" style="color: var(--success);" id="clientesVal">3</div>
+              <div class="metric-sub">novos contratos/mês</div>
+            </div>
+          </div>
+
+          <div class="roi-highlight-box">
+            <div class="roi-stat">
+              <h5>Nova Receita Recorrente (MRR)</h5>
+              <div class="val" id="mrrVal">R$ 2.400/mês</div>
+              <small>Adicionados todo mês</small>
+            </div>
+            <div class="roi-stat">
+              <h5>Valor Anual Acumulado (LTV 12m)</h5>
+              <div class="val" id="ltvVal">R$ 28.800</div>
+              <small>Retorno de 28x o anúncio</small>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ABA 3: WHATSAPP -->
+    <div class="tab-content" id="tab-whatsapp">
+      <div class="whatsapp-container">
+        
+        <div class="wa-top-bar">
+          <div class="wa-contact-avatar">CC</div>
+          <div class="wa-top-info">
+            <h4>Carolina Carneiro · BPO Grupo Agicon</h4>
+            <p><i class="fas fa-circle" style="color: #25d366; font-size: 0.5rem;"></i> Online agora · Especialista em BPO Financeiro</p>
+          </div>
+        </div>
+
+        <div class="wa-chat-window" id="waChatWindow">
+          <div class="bubble sent">
+            Olá! Vi o anúncio do BPO Financeiro do Grupo Agicon e gostaria de entender como terceirizar a rotina de contas da minha empresa.
+            <span class="bubble-time">10:30 ✓✓</span>
+          </div>
+
+          <div class="bubble received">
+            Olá, tudo bem? Aqui é a equipe de BPO Financeiro do Grupo Agicon! 👋<br><br>
+            Muito bom falar com você. Nosso objetivo é tirar toda essa sobrecarga de contas a pagar, a receber, conciliação e emissão de notas do dia a dia do empresário, com 100% de segurança e sem fidelidade.<br><br>
+            Qual é o seu nome e o segmento da sua empresa?
+            <span class="bubble-time">10:31</span>
+          </div>
+        </div>
+
+        <div class="wa-interactive-actions">
+          <span class="wa-actions-label">Simular resposta do empresário:</span>
+          <div class="wa-choices-grid" id="waChoices">
+            <button class="wa-choice-btn" onclick="sendLeadReply('Sou o Marcelo, tenho uma clínica odontológica com 6 funcionários.')">
+              Clínica / Saúde (6 funcionários)
+            </button>
+            <button class="wa-choice-btn" onclick="sendLeadReply('Sou a Roberta, tenho uma empresa de prestação de serviços de TI.')">
+              Serviços de Tecnologia / TI
+            </button>
+            <button class="wa-choice-btn" onclick="sendLeadReply('Sou o Fernando, tenho uma distribuidora de materiais comerciais.')">
+              Comércio / Distribuidora
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <strong>BPO Financeiro Grupo Agicon</strong> · Simulação Interna Protegida · Inspirado no Modelo AgiCorp Seguros
+  </footer>
+
+  <script>
+    // SISTEMA DE PROTEÇÃO POR SENHA (SHA-256)
+    // Senha padrão: agicon2026 (ou bpoagicon)
+    const validHashes = [
+      "7315928ad4b0b9b87775b33ef798975e218aa9a28da286d6496de535da1098e8", // agicon2026
+      "338600d8b4eeb6452243d463d1bc8452ef72a8fe7b4c6e94916a246944ec782c"  // bpoagicon
+    ];
+
+    async function sha256(str) {
+      const buf = new TextEncoder().encode(str);
+      const digest = await crypto.subtle.digest("SHA-256", buf);
+      return Array.from(new Uint8Array(digest)).map(x => x.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function verifyPass() {
+      const input = document.getElementById("passInput").value.trim();
+      const err = document.getElementById("authError");
+      if (!input) return;
+
+      const hash = await sha256(input);
+      if (validHashes.includes(hash)) {
+        sessionStorage.setItem("agicon_bpo_auth", "true");
+        document.getElementById("authOverlay").classList.add("unlocked");
+        err.style.display = "none";
+      } else {
+        err.style.display = "block";
+        document.getElementById("passInput").value = "";
+        document.getElementById("passInput").focus();
+      }
+    }
+
+    function checkAuth() {
+      if (sessionStorage.getItem("agicon_bpo_auth") === "true") {
+        document.getElementById("authOverlay").classList.add("unlocked");
+      }
+    }
+
+    function lockSession() {
+      sessionStorage.removeItem("agicon_bpo_auth");
+      document.getElementById("authOverlay").classList.remove("unlocked");
+      document.getElementById("passInput").value = "";
+      document.getElementById("passInput").focus();
+    }
+
+    // CARROSSEL DADOS
+    const slides = [
+      {
+        badge: "Card 1 de 6 · Conceito",
+        title: "Traduzindo o Financês para quem é dono de empresa.",
+        desc: "Você abriu seu negócio para fazê-lo crescer, não para passar o dia decifrando termos contábeis ou digitando código de barras de boleto.",
+        footer: "👉 Arraste para o lado e veja o essencial"
+      },
+      {
+        badge: "Card 2 de 6 · Conciliação",
+        title: "1. Conciliação Bancária diária",
+        desc: "O que parece: Conferência chata de extrato.<br><br><strong class='slide-highlight'>O que é de verdade:</strong> Certeza absoluta de que nenhum centavo sumiu, nenhuma taxa indevida foi cobrada e que o saldo é real.",
+        footer: "Com o BPO da Agicon: 100% conciliado todos os dias."
+      },
+      {
+        badge: "Card 3 de 6 · Contas a Pagar",
+        title: "2. Gestão de Contas a Pagar",
+        desc: "O que parece: Pagar contas correndo antes das 17h.<br><br><strong class='slide-highlight'>O que é de verdade:</strong> Agendamento pontual que elimina juros por esquecimento. Nossa equipe agenda; você só autoriza no app do banco.",
+        footer: "100% Seguro: o controle permanece com você."
+      },
+      {
+        badge: "Card 4 de 6 · Cobrança",
+        title: "3. Régua de Cobrança e Recebíveis",
+        desc: "O que parece: Constrangimento de cobrar clientes.<br><br><strong class='slide-highlight'>O que é de verdade:</strong> Processo impessoal e automático que reduz a inadimplência sem desgastar o relacionamento comercial.",
+        footer: "Pontualidade e tranquilidade no fluxo."
+      },
+      {
+        badge: "Card 5 de 6 · Lucro Real",
+        title: "4. DRE & Fluxo de Caixa Projetado",
+        desc: "O que parece: Planilha cheia de termos difíceis.<br><br><strong class='slide-highlight'>O que é de verdade:</strong> O mapa do seu negócio: saber se a empresa deu lucro e prever o saldo dos próximos 30 dias.",
+        footer: "Decisões baseadas em números, não no 'achismo'."
+      },
+      {
+        badge: "Card 6 de 6 · Próximo Passo",
+        title: "Terceirize a rotina. Mantenha 100% do controle.",
+        desc: "• Mais de 11 anos de solidez do Grupo Agicon<br>• Sem contrato de fidelidade (pague mês a mês)<br>• Planos sob medida a partir de R$ 500/mês",
+        footer: "📲 Toque em 'Saiba Mais' e solicite um Diagnóstico Sem Custo"
+      }
+    ];
+
+    let currentSlide = 0;
+
+    function renderSlide() {
+      const container = document.getElementById('slideContent');
+      const dotsContainer = document.getElementById('carouselDots');
+      const item = slides[currentSlide];
+
+      container.innerHTML = `
+        <span class="slide-badge">${item.badge}</span>
+        <div class="slide-title">${item.title}</div>
+        <div class="slide-desc">${item.desc}</div>
+        <div class="slide-footer-tag">${item.footer}</div>
+      `;
+
+      dotsContainer.innerHTML = slides.map((_, idx) => `
+        <div class="dot ${idx === currentSlide ? 'active' : ''}"></div>
+      `).join('');
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      renderSlide();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      renderSlide();
+    }
+
+    // TABS
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // CALCULADORA
+    function updateCalculator() {
+      const budget = parseInt(document.getElementById('budgetSlider').value);
+      const ticket = parseInt(document.getElementById('ticketSlider').value);
+
+      document.getElementById('budgetDisplay').innerText = `R$ ${budget.toLocaleString('pt-BR')}`;
+      document.getElementById('ticketDisplay').innerText = `R$ ${ticket.toLocaleString('pt-BR')}/mês`;
+
+      const cpc = 1.75;
+      const cliques = Math.round(budget / cpc);
+      const impressoes = Math.round(cliques * 50);
+      const leads = Math.round(cliques * 0.08);
+      const reunioes = Math.max(1, Math.round(leads * 0.28));
+      const novosClientes = Math.max(1, Math.round(reunioes * 0.25));
+
+      const mrr = novosClientes * ticket;
+      const ltv12m = mrr * 12;
+
+      document.getElementById('impressoesVal').innerText = impressoes.toLocaleString('pt-BR');
+      document.getElementById('cliquesVal').innerText = cliques.toLocaleString('pt-BR');
+      document.getElementById('leadsVal').innerText = leads.toLocaleString('pt-BR');
+      document.getElementById('reunioesVal').innerText = reunioes.toLocaleString('pt-BR');
+      document.getElementById('clientesVal').innerText = novosClientes.toLocaleString('pt-BR');
+
+      document.getElementById('mrrVal').innerText = `R$ ${mrr.toLocaleString('pt-BR')}/mês`;
+      document.getElementById('ltvVal').innerText = `R$ ${ltv12m.toLocaleString('pt-BR')}`;
+    }
+
+    function setBudget(val) {
+      document.getElementById('budgetSlider').value = val;
+      updateCalculator();
+    }
+
+    function setTicket(val) {
+      document.getElementById('ticketSlider').value = val;
+      updateCalculator();
+    }
+
+    // WHATSAPP
+    function sendLeadReply(text) {
+      const chat = document.getElementById('waChatWindow');
+      
+      const leadMsg = document.createElement('div');
+      leadMsg.className = 'bubble sent';
+      leadMsg.innerHTML = `${text} <span class="bubble-time">10:32 ✓✓</span>`;
+      chat.appendChild(leadMsg);
+      chat.scrollTop = chat.scrollHeight;
+
+      document.getElementById('waChoices').innerHTML = `<span style="font-size:0.75rem; color:#8696a0;">Carolina está digitando...</span>`;
+
+      setTimeout(() => {
+        const resp = document.createElement('div');
+        resp.className = 'bubble received';
+        resp.innerHTML = `
+          Perfeito! Esse é exatamente o perfil que mais ganha tempo e previsibilidade com o nosso modelo de BPO.<br><br>
+          Como no Grupo Agicon temos a regra de <strong>não engessar pacotes</strong>, o próximo passo ideal é um <strong>Diagnóstico Financeiro Sem Custo</strong> de 20 minutos com a nossa especialista Carolina Carneiro.<br><br>
+          Nessa conversa rápida, analisamos suas contas a pagar, a receber e dimensionamos o plano exato (a partir de R$ 500/mês), sem fidelidade.<br><br>
+          Você teria disponibilidade para esse alinhamento amanhã às <strong>10h</strong> ou às <strong>15h</strong>?
+          <span class="bubble-time">10:33</span>
+        `;
+        chat.appendChild(resp);
+        chat.scrollTop = chat.scrollHeight;
+
+        document.getElementById('waChoices').innerHTML = `
+          <button class="wa-choice-btn" onclick="sendLeadReply('Pode ser amanhã às 10h! Como fazemos?')">Prefiro amanhã às 10h</button>
+          <button class="wa-choice-btn" onclick="sendLeadReply('Amanhã às 15h fica perfeito para mim.')">Prefiro amanhã às 15h</button>
+          <button class="wa-choice-btn" onclick="sendLeadReply('Vocês têm acesso ao meu dinheiro ou só agendam?')">Dúvida sobre segurança bancária</button>
+        `;
+      }, 1200);
+    }
+
+    // Iniciar
+    checkAuth();
+    renderSlide();
+    updateCalculator();
+  </script>
+</body>
+</html>
